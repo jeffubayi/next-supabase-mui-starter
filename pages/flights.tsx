@@ -26,18 +26,18 @@ export default function Flights(props: Props) {
         () => [
             { field: 'estDepartureAirport', headerName: 'Airport', flex: 1 },
             {
-                field: 'lastSeen', headerName: 'Time', flex: 1, type: "date",
+                field: 'lastSeen', headerName: 'Time', flex: 1,
                 valueGetter: (params: GridValueGetterParams) => {
-                    return new Date(params.row.lastSeen)
+                    return new Date(params.row.lastSeen).toLocaleString()
                 },
             },
             { field: 'arrivalAirportCandidatesCount', headerName: 'Arriving', flex: 1 },
             { field: 'departureAirportCandidatesCount', headerName: 'Departing', flex: 1 },
         ], []);
 
-    if (!user) {
-        router.push("/")
-    }
+    // if (!user) {
+    //     router.push("/")
+    // }
     const handleLogOut = () => {
         router.push("/")
         supabaseClient.auth.signOut()
