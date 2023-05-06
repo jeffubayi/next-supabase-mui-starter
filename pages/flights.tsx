@@ -35,7 +35,7 @@ export default function Flights(props: Props) {
             { field: 'departureAirportCandidatesCount', headerName: 'Departing', flex: 1 },
         ], []);
 
-    if (!user) {
+    if (!user?.email) {
         router.push("/")
     }
     const handleLogOut = () => {
