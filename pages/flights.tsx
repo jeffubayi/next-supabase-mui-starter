@@ -2,68 +2,42 @@ import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Paper, Button } from '@mui/material';
-import { useMemo, useState, useEffect } from 'react';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import axios from "axios";
+import { useMemo } from 'react';
+import { DataGrid, GridToolbar, GridValueGetterParams } from '@mui/x-data-grid';
 import { useRouter } from 'next/router';
 import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react';
 import DeleteIcon from '@mui/icons-material/Logout';
-
-type FlightData = {
-    icao24: string;
-    callsign: string | null;
-    arrivalAirportCandidatesCount: string | null;
-    departureAirportCandidatesCount: string | null;
-    estDepartureAirport: string | null;
-    lastSeen: Date;
-    firstSeen: Date;
-};
+import { useGetFlightsQuery } from '../redux/hooks';
 
 interface Props {
     window?: () => Window;
 }
 
-
-export default function DrawerAppBar(props: Props) {
-    const { window } = props;
-    const [flights, setFlights] = useState<FlightData[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+export default function Flights(props: Props) {
     const router = useRouter();
     const user = useUser();
     const supabaseClient = useSupabaseClient()
-    console.log(`user`, user)
+    const { data, isLoading, isError,error } = useGetFlightsQuery();
+    const flights = data ? data : []
     const columns = useMemo(
         () => [
             { field: 'estDepartureAirport', headerName: 'Airport', flex: 1 },
-            { field: 'lastSeen', headerName: 'Time', flex: 1 },
+            {
+                field: 'lastSeen', headerName: 'Time', flex: 1, type: "date",
+                valueGetter: (params: GridValueGetterParams) => {
+                    return new Date(params.row.lastSeen)
+                },
+            },
             { field: 'arrivalAirportCandidatesCount', headerName: 'Arriving', flex: 1 },
             { field: 'departureAirportCandidatesCount', headerName: 'Departing', flex: 1 },
         ], []);
 
-    useEffect(() => {
-        // Fetch data from openSkyApi
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(
-                    "https://opensky-network.org/api/flights/all?begin=1517227200&end=1517230800"
-                );
-
-                response?.data && setLoading(false)
-                setFlights(response.data);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        fetchData();
-    }, []);
-
-
-
+    if (!user) {
+        router.push("/")
+    }
     const handleLogOut = () => {
         router.push("/")
         supabaseClient.auth.signOut()
@@ -96,11 +70,12 @@ export default function DrawerAppBar(props: Props) {
                 </p>
                 <Paper sx={{ background: "#fff", borderRadius: "10px" }}>
                     <DataGrid
+                        autoHeight
                         pagination
                         rows={flights}
                         columns={columns}
                         pageSizeOptions={[5, 10, 25]}
-                        loading={loading}
+                        loading={isLoading}
                         getRowId={(row) => row?.icao24}
                         components={{ Toolbar: GridToolbar }}
                         componentsProps={{

@@ -7,6 +7,8 @@ import createEmotionCache from '../utility/createEmotionCache';
 import { Toaster } from "react-hot-toast";
 import { supabase } from "../utility/supabaseClient";
 import  theme  from "../styles/theme";
+import { store } from "../redux/store";
+import { Provider } from "react-redux";
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
@@ -19,6 +21,7 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps, initialSession, } = props;
 
   return (
+    <Provider store={store}>
     <SessionContextProvider supabaseClient={supabase} initialSession={initialSession}>
       <CacheProvider value={emotionCache}>
         <ThemeProvider theme={theme}>
@@ -33,6 +36,7 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
         </ThemeProvider>
       </CacheProvider>
     </SessionContextProvider>
+    </Provider>
   )
 }
 export default MyApp
