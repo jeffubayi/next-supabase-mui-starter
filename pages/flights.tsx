@@ -35,9 +35,9 @@ export default function Flights(props: Props) {
             { field: 'departureAirportCandidatesCount', headerName: 'Departing', flex: 1 },
         ], []);
 
-    // if (!user) {
-    //     router.push("/")
-    // }
+    if (!user) {
+        router.push("/")
+    }
     const handleLogOut = () => {
         router.push("/")
         supabaseClient.auth.signOut()
