@@ -13,7 +13,7 @@ export const roboto = Fira_Sans({
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#3FCF8E',
+      main: '#42CD8E',
       contrastText: "#e3f2fd",
     },
     secondary: {
