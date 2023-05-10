@@ -40,7 +40,7 @@ export default function SignInSide() {
       email: data.get('email'),
       password: data.get('password'),
     });
-    router.push("/Home");
+    router.push("/about");
   };
 
 

@@ -54,7 +54,7 @@ const tiers = [
     },
 ];
 
-export default function Home() {
+export default function About() {
     const router = useRouter();
     return (
         <React.Fragment>
@@ -74,7 +74,7 @@ export default function Home() {
                         <Link
                             variant="button"
                             color="text.primary"
-                            href="#"
+                            href="/about"
                             sx={{ my: 1, mx: 1.5 }}
                         >
                             About
