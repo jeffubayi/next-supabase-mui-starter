@@ -4,11 +4,13 @@ import { Avatar, Box,  CssBaseline, Grid, Link, Paper, Typography } from '@mui/m
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { Auth } from '@supabase/auth-ui-react'
+import { useTheme } from '@mui/material/styles';
 
 
 export default function SignIn() {
   const supabase = useSupabaseClient()
-
+  const theme = useTheme()
+  console.log(`theme`,theme.palette.mode)
   return (
     <Grid container component="main" sx={{ height: '100vh' }}>
       <CssBaseline />
@@ -50,7 +52,7 @@ export default function SignIn() {
               magicLink
               providers={['google']}
               redirectTo="/signin"
-              theme="light"
+              theme={theme.palette.mode}
             />
               {/* Copyright */}
 

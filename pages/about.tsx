@@ -19,6 +19,12 @@ import ListSubheader from '@mui/material/ListSubheader';
 import Switch from '@mui/material/Switch';
 import WifiIcon from '@mui/icons-material/Wifi';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
+import { toggleColorMode } from '../redux/themeSlice'
+import { useDispatch, useSelector } from "react-redux";
+
+interface RootState {
+    darkMode: boolean;
+}
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -57,24 +63,16 @@ export default function About() {
     const supabaseClient = useSupabaseClient()
     const session = useSession()
     const user = useUser()
+    const router = useRouter()
     const [value, setValue] = useState(0)
     const [loading, setLoading] = useState(true)
     const [username, setUsername] = useState("")
     const [website, setWebsite] = useState("")
     const [avatar_url, setAvatarUrl] = useState("")
-    const [checked, setChecked] = React.useState(['wifi']);
-
-    const handleToggle = (value: string) => () => {
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
-
-        if (currentIndex === -1) {
-            newChecked.push(value);
-        } else {
-            newChecked.splice(currentIndex, 1);
-        }
-
-        setChecked(newChecked);
+    const dispatch = useDispatch();
+    const isDarkMode = useSelector((state: RootState) => state.darkMode);
+    const handleDarkModeToggle = () => {
+        dispatch(toggleColorMode());
     };
 
     useEffect(() => {
@@ -104,6 +102,7 @@ export default function About() {
         } catch (error) {
             toast.error('Error loading user data!');
             console.log(error)
+            // router.push("/signin")
         } finally {
             setLoading(false)
         }
@@ -156,7 +155,7 @@ export default function About() {
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-                <Box sx={{ width: '100%' }}>
+                <Paper sx={{ width: '100%',p:2 }}>
                     <Grid container rowSpacing={1} columnSpacing={{ xs: 2, sm: 3, md: 4 }}>
                         <Grid item xs={12} md={6}>
                             <TextField fullWidth size="small"
@@ -191,7 +190,7 @@ export default function About() {
                             </Button>
                         </Grid>
                     </Grid>
-                </Box>
+                </Paper>
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <List
@@ -205,8 +204,7 @@ export default function About() {
                         <ListItemText id="switch-list-label-bluetooth" primary="Dark theme" />
                         <Switch
                             edge="end"
-                            onChange={handleToggle('bluetooth')}
-                            checked={checked.indexOf('bluetooth') !== -1}
+                            checked={isDarkMode} onChange={handleDarkModeToggle}
                             inputProps={{
                                 'aria-labelledby': 'switch-list-label-bluetooth',
                             }}

@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { openSkyApi } from "./hooks";
+import theme from "./themeSlice";
 
 export const store = configureStore({
     reducer: {
+        theme,
         [openSkyApi.reducerPath]: openSkyApi.reducer,
     },
 

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useMemo } from 'react';
 import { DataGrid, GridToolbar, GridValueGetterParams } from '@mui/x-data-grid';
 import { useGetFlightsQuery } from '../redux/hooks';
+import { Typography, Paper } from '@mui/material';
 
 interface Props {
     window?: () => Window;
@@ -25,26 +26,28 @@ export default function Flights(props: Props) {
 
 
     return (
-        <DataGrid
-            autoHeight
-            pagination
-            rows={flights}
-            columns={columns}
-            pageSizeOptions={[5, 10, 25]}
-            loading={isLoading}
-            getRowId={(row) => row?.icao24}
-            components={{ Toolbar: GridToolbar }}
-            componentsProps={{
-                toolbar: {
-                    showQuickFilter: true,
-                    quickFilterProps: { debounceMs: 500 },
-                },
-            }}
-            initialState={{
-                pagination: {
-                    paginationModel: { pageSize: 10, page: 0 },
-                },
-            }}
-        />
+        <Paper>
+            <DataGrid
+                autoHeight
+                pagination
+                rows={flights}
+                columns={columns}
+                pageSizeOptions={[5, 10, 25]}
+                loading={isLoading}
+                getRowId={(row) => row?.icao24}
+                components={{ Toolbar: GridToolbar }}
+                componentsProps={{
+                    toolbar: {
+                        showQuickFilter: true,
+                        quickFilterProps: { debounceMs: 500 },
+                    },
+                }}
+                initialState={{
+                    pagination: {
+                        paginationModel: { pageSize: 10, page: 0 },
+                    },
+                }}
+            />
+        </Paper>
     );
 }
