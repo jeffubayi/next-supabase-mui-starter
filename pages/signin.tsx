@@ -10,7 +10,7 @@ import { useTheme } from '@mui/material/styles';
 export default function SignIn() {
   const supabase = useSupabaseClient()
   const theme = useTheme()
-  console.log(`theme`,theme.palette.mode)
+  
   return (
     <Grid container component="main" sx={{ height: '100vh' }}>
       <CssBaseline />

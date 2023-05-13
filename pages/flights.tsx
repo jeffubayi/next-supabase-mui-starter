@@ -26,28 +26,27 @@ export default function Flights(props: Props) {
 
 
     return (
-        <Paper>
-            <DataGrid
-                autoHeight
-                pagination
-                rows={flights}
-                columns={columns}
-                pageSizeOptions={[5, 10, 25]}
-                loading={isLoading}
-                getRowId={(row) => row?.icao24}
-                components={{ Toolbar: GridToolbar }}
-                componentsProps={{
-                    toolbar: {
-                        showQuickFilter: true,
-                        quickFilterProps: { debounceMs: 500 },
-                    },
-                }}
-                initialState={{
-                    pagination: {
-                        paginationModel: { pageSize: 10, page: 0 },
-                    },
-                }}
-            />
-        </Paper>
+        <DataGrid
+            sx={{ borderRadius: "1rem", bgcolor: 'background.paper'}}
+            autoHeight
+            pagination
+            rows={flights}
+            columns={columns}
+            pageSizeOptions={[5, 10, 25]}
+            loading={isLoading}
+            getRowId={(row) => row?.icao24}
+            components={{ Toolbar: GridToolbar }}
+            componentsProps={{
+                toolbar: {
+                    showQuickFilter: true,
+                    quickFilterProps: { debounceMs: 500 },
+                },
+            }}
+            initialState={{
+                pagination: {
+                    paginationModel: { pageSize: 10, page: 0 },
+                },
+            }}
+        />
     );
 }

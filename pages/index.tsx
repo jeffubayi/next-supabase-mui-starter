@@ -1,15 +1,6 @@
-
-
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
-import Grid from '@mui/material/Grid';
 import StarIcon from '@mui/icons-material/StarBorder';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
+import { Button, Card, CardActions, CardContent, CardHeader, Container, Grid, Typography } from '@mui/material';
 import { useRouter } from "next/router";
 import { tiers } from "../utility/enums"
 
@@ -56,7 +47,7 @@ export default function Index() {
                   sx={{
                     backgroundColor: (theme) =>
                       theme.palette.mode === 'light'
-                        ? theme.palette.grey[200]
+                        ? theme.palette.grey[300]
                         : theme.palette.grey[700],
                   }}
                 />
@@ -78,6 +69,7 @@ export default function Index() {
                   <Button
                     hidden
                     fullWidth
+                    sx={{ color: tier.buttonVariant == 'contained' ? `contrastText` : '#42CD8E' }}
                     variant={tier.buttonVariant as 'outlined' | 'contained'}
                     onClick={() => router.push(`${tier.price}`)}
                   >

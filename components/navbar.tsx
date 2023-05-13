@@ -4,12 +4,16 @@ import { useRouter } from "next/router";
 import { useSession, useSupabaseClient, useUser } from '@supabase/auth-helpers-react'
 import { IconButton, Button, AppBar, Avatar, Box, CssBaseline, Divider, GlobalStyles, List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@mui/material';
 import { Settings, Logout } from '@mui/icons-material';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { clearUserProfile } from '../redux/userProfileSlice'
+import { RootState } from "../redux/types";
 
 export default function Navbar() {
-    const session = useSession()
+    const session = useSession();
     const router = useRouter();
-    const user = useUser()
+    const user = useUser();
+    const dispatch = useDispatch();
+    const userProfile = useSelector((state: RootState) => state.userProfile);
     const supabaseClient = useSupabaseClient()
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -18,6 +22,12 @@ export default function Navbar() {
     };
     const handleClose = () => {
         setAnchorEl(null);
+    };
+
+    const handleLogout = () => {
+        router.push(`/signin`)
+        supabaseClient.auth.signOut()
+        dispatch(clearUserProfile())
     };
 
     return (
@@ -32,7 +42,7 @@ export default function Navbar() {
             >
                 <Toolbar sx={{ flexWrap: 'wrap' }}>
                     <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-                        NeMuReSu
+                        {userProfile.company || "NeMuReSu"}
                     </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
                         <MenuItem onClick={() => router.push("/")}>
@@ -50,7 +60,7 @@ export default function Navbar() {
                                     aria-haspopup="true"
                                     aria-expanded={open ? 'true' : undefined}
                                 >
-                                    <Avatar src={user?.user_metadata?.avatar_url || ""} sx={{ width: 32, height: 32 }} />
+                                    <Avatar src={`https://aaepbxpivppmvuaemajn.supabase.co/storage/v1/object/public/avatars/${userProfile.avatar_url}` || user?.user_metadata?.avatar_url} sx={{ width: 32, height: 32 }} />
                                 </IconButton>
                             </Tooltip>
                         )}
@@ -93,9 +103,9 @@ export default function Navbar() {
                         <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                             <ListItem>
                                 <ListItemAvatar>
-                                    <Avatar src={user?.user_metadata?.avatar_url || ""} />
+                                    <Avatar src={`https://aaepbxpivppmvuaemajn.supabase.co/storage/v1/object/public/avatars/${userProfile.avatar_url}` || user?.user_metadata?.avatar_url || ""} />
                                 </ListItemAvatar>
-                                <ListItemText primary={user?.user_metadata?.name} secondary={session?.user?.email || "Not signed in"} />
+                                <ListItemText primary={userProfile.username || user?.user_metadata?.name || "Signed in as:"} secondary={session?.user?.email || "Not signed in"} />
                             </ListItem>
                         </List>
                         <Divider />
@@ -105,7 +115,7 @@ export default function Navbar() {
                             </ListItemIcon>
                             Settings
                         </MenuItem>
-                        <MenuItem onClick={() => supabaseClient.auth.signOut()}>
+                        <MenuItem onClick={handleLogout}>
                             <ListItemIcon>
                                 <Logout fontSize="small" />
                             </ListItemIcon>

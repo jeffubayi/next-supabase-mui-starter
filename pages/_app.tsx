@@ -18,13 +18,13 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
   const router = useRouter();
   const currentRoute = router.pathname;
  
-
   return (
     <Provider store={store}>
       <SessionContextProvider
         supabaseClient={supabase}
         initialSession={initialSession}
-      >{currentRoute == "/signin" ? (
+      >
+        {currentRoute == "/signin" ? (
           <Component {...pageProps} />
       ) : (
         <Layout>
