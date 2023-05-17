@@ -12,7 +12,7 @@ export interface UserProfileState {
     id?:string;
     username: string;
     website: string;
-    avatar_url: string;
+    avatar_url?: string;
     company: string;
     updated_at?:string;
 }
