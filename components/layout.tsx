@@ -6,6 +6,7 @@ import { PaletteMode } from "@mui/material";
 import {  useSelector, } from "react-redux";
 import Navbar from './navbar';
 import { getDesignTokens } from "../styles/theme";
+import { useRouter } from "next/router";
 
 interface Props {
   children: React.ReactNode;
@@ -20,6 +21,8 @@ interface RootState {
 
 export default function Layout({ children }: Props) {
   const [mode, setMode] = useState<PaletteMode>("light");
+  const router = useRouter();
+  const currentRoute:string = router.pathname;
   const colorMode:Boolean = useSelector((state: RootState) => state.theme.darkMode);
   useMemo(() => {
     setMode((prevMode: PaletteMode) =>
@@ -32,9 +35,9 @@ export default function Layout({ children }: Props) {
   const theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
   return (
     <ThemeProvider theme={theme}>
-      <Navbar />
+      {currentRoute !== "/signin" && <Navbar />}
       <Box component="main">
-        <Container disableGutters maxWidth="md" component="main" sx={{ pt: 3, pb: 3 }}>
+        <Container disableGutters maxWidth={currentRoute == "/signin" ? "xl" : "md"} component="main">
           {children}
         </Container>
       </Box>

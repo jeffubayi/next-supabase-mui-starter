@@ -36,7 +36,7 @@ export default function Navbar() {
             <CssBaseline />
             <AppBar
                 position="static"
-                color="default"
+                color="inherit"
                 elevation={0}
                 sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
             >
@@ -60,7 +60,7 @@ export default function Navbar() {
                                     aria-haspopup="true"
                                     aria-expanded={open ? 'true' : undefined}
                                 >
-                                    <Avatar src={`https://aaepbxpivppmvuaemajn.supabase.co/storage/v1/object/public/avatars/${userProfile.avatar_url}` || user?.user_metadata?.avatar_url} sx={{ width: 32, height: 32 }} />
+                                    <Avatar src={userProfile.avatar_url ? `https://aaepbxpivppmvuaemajn.supabase.co/storage/v1/object/public/avatars/${userProfile.avatar_url}` : user?.user_metadata?.avatar_url} sx={{ width: 32, height: 32 }} />
                                 </IconButton>
                             </Tooltip>
                         )}
@@ -103,7 +103,7 @@ export default function Navbar() {
                         <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                             <ListItem>
                                 <ListItemAvatar>
-                                    <Avatar src={`https://aaepbxpivppmvuaemajn.supabase.co/storage/v1/object/public/avatars/${userProfile.avatar_url}` || user?.user_metadata?.avatar_url || ""} />
+                                    <Avatar src={userProfile.avatar_url ?`https://aaepbxpivppmvuaemajn.supabase.co/storage/v1/object/public/avatars/${userProfile.avatar_url}` : user?.user_metadata?.avatar_url} />
                                 </ListItemAvatar>
                                 <ListItemText primary={userProfile.username || user?.user_metadata?.name || "Signed in as:"} secondary={session?.user?.email || "Not signed in"} />
                             </ListItem>

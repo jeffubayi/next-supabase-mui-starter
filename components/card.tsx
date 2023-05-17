@@ -1,17 +1,17 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import { Typography, CardMedia, Chip } from '@mui/material';
+import React, { useEffect, useState } from 'react'
+import { Typography, Card, Box, IconButton, CardContent, Chip, Badge, Avatar, Skeleton } from '@mui/material';
 import { useUser, useSession, useSupabaseClient } from '@supabase/auth-helpers-react'
-import { useEffect, useState } from 'react'
-import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/AddAPhoto';
-import Badge from '@mui/material/Badge';
-import Avatar from '@mui/material/Avatar';
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import AdminPanelSettingsIcon from '@mui/icons-material/Launch';
 
-export default function ProfileCard({ url, onUpload, username }: { url: string, onUpload: any, username: any }) {
+interface Profile {
+  url: string,
+  onUpload: any,
+  username: string,
+  website: string
+}
+
+export default function ProfileCard({ url, onUpload, username, website }: Profile) {
   const user = useUser()
   const session = useSession()
   const supabase = useSupabaseClient()
@@ -64,31 +64,35 @@ export default function ProfileCard({ url, onUpload, username }: { url: string, 
   }
 
   return (
-    <Card sx={{ display: 'flex',borderRadius:"1rem" }} elevation={0}>
+    <Card sx={{ display: 'flex', borderRadius: "1rem" }} elevation={0}>
       <Badge
         overlap="circular"
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         badgeContent={
-          <IconButton  aria-label="upload picture" component="label">
+          <IconButton aria-label="upload picture" component="label" >
             <input hidden accept="image/*" type="file" onChange={uploadAvatar}
               disabled={uploading} />
-            <EditIcon  sx={{fill:"grey"}}/>
+            <EditIcon sx={{ fill: "#a6a6a6" }} />
           </IconButton>
         }
       >
-        <Avatar alt="user" sx={{width:"7rem",height:"7rem",m:1}} src={avatarUrl || user?.user_metadata?.avatar_url} />
+        {session ? (<Avatar alt="user" sx={{ width: "7rem", height: "7rem", m: 1 }} src={avatarUrl || user?.user_metadata?.avatar_url} />) : (
+          <Skeleton animation="wave" variant="circular" sx={{ width: "7rem", height: "7rem", m: 1 }} />
+        )}
       </Badge>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <CardContent sx={{ flex: '1 0 auto' }}>
-          <Typography component="div" variant="h5">
+          {session ? <Typography component="div" variant="h5">
             {username || user?.user_metadata?.name}
           </Typography>
-          <Typography variant="subtitle1" color="text.secondary" component="div">
+            : <Skeleton width="60%" />}
+          {session ? <Typography variant="subtitle1" color="text.secondary" component="div">
             {session?.user?.email || user?.user_metadata?.email}
           </Typography>
+            : <Skeleton />}
         </CardContent>
         <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
-          <Chip icon={<AdminPanelSettingsIcon />} label="Administrator" variant="outlined" color="primary"/>
+          <Chip onClick={() => { window.location.assign(website) }} icon={<AdminPanelSettingsIcon />} size="small" label={website || "not available"} variant="outlined" color="primary" />
         </Box>
       </Box>
 
