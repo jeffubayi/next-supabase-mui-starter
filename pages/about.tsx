@@ -3,9 +3,8 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import ContactMailIcon from '@mui/icons-material/ForwardToInbox';
 import PersonIcon from '@mui/icons-material/Person';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
-import { useRouter } from "next/router";
-import { useSession, useSupabaseClient, useUser } from '@supabase/auth-helpers-react'
-import { TextField, Grid, Button, Box, List, ListItem, ListItemIcon, ListItemText, ListSubheader, Paper, Switch, Tab, Tabs, Typography } from '@mui/material';
+import { useSession, useUser } from '@supabase/auth-helpers-react'
+import { TextField, Grid, Button, Box, List, ListItem, Skeleton, ListItemIcon, ListItemText, ListSubheader, Paper, Switch, Tab, Tabs, Typography } from '@mui/material';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from "react-redux";
 
@@ -53,10 +52,8 @@ function a11yProps(index: number) {
 }
 
 export default function About() {
-    const supabaseClient = useSupabaseClient()
     const session = useSession()
     const user = useUser()
-    const router = useRouter()
     const dispatch = useDispatch();
     const [value, setValue] = useState(0)
     const [loading, setLoading] = useState(true)
@@ -75,40 +72,39 @@ export default function About() {
     };
 
     useEffect(() => {
-        getProfile()
-    }, [session])
+        async function getProfile() {
+            try {
+                setLoading(true)
+                if (!user) throw new Error('No user')
 
-    async function getProfile() {
-        try {
-            setLoading(true)
-            if (!user) throw new Error('No user')
+                let { data, error, status } = await supabase
+                    .from('profiles')
+                    .select(`username, website, avatar_url,company`)
+                    .eq('id', user.id)
+                    .single()
 
-            let { data, error, status } = await supabase
-                .from('profiles')
-                .select(`username, website, avatar_url,company`)
-                .eq('id', user.id)
-                .single()
+                if (error && status !== 406) {
+                    throw error
+                }
 
-            console.log(`profiles`, data)
-            if (error && status !== 406) {
-                throw error
+                if (data) {
+                    setUsername(data.username)
+                    setWebsite(data.website)
+                    setAvatarUrl(data.avatar_url)
+                    setCompany(data.company)
+                    dispatch(setUserProfile(data))
+                }
+            } catch (error) {
+                toast.error('Error loading user data!');
+                console.log(error)
+            } finally {
+                setLoading(false)
             }
-
-            if (data) {
-                setUsername(data.username)
-                setWebsite(data.website)
-                setAvatarUrl(data.avatar_url)
-                setCompany(data.company)
-                dispatch(setUserProfile(data))
-            }
-        } catch (error) {
-            toast.error('Error loading user data!');
-            console.log(error)
-            // router.push("/signin")
-        } finally {
-            setLoading(false)
         }
-    }
+        getProfile()
+    }, [user, dispatch])
+
+
 
 
     async function updateProfile({
@@ -119,28 +115,12 @@ export default function About() {
     }: {
         username: string,
         website: string,
-        avatar_url: string,
+        avatar_url?: string,
         company: string
     }) {
         try {
             setLoading(true)
             if (!user) throw new Error('No user')
-            const checkIdExists = async (id: string) => {
-                const { data, error } = await supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', id);
-
-                if (error) {
-                    console.error('Error checking ID:', error);
-                    return false;
-                }
-
-                return data.length > 0;
-            };
-
-            // check if user already exists
-            const idExists = await checkIdExists(user?.id);
 
             const updates = {
                 id: user.id,
@@ -150,21 +130,11 @@ export default function About() {
                 company,
                 updated_at: new Date().toISOString(),
             }
-
-            if (idExists) {
-                // if user profile exists update
-                let { error } = await supabase.from('profiles').upsert(updates)
-                if (error) throw error
-                dispatch(setUserProfile(updates))
-                toast.success('Profile updated successfully!');
-            } else {
-                //add new profile
-                let { data, error } = await supabase.from('profiles').insert([updates])
-                console.log(`   err`, error, data)
-                if (error) throw error
-                dispatch(setUserProfile(updates))
-                toast.success('Profile created succesfully!');
-            }
+            let { data, error } = await supabase.from('profiles').upsert(updates).select()
+            console.log(`  data`, data)
+            if (error) throw error
+            dispatch(setUserProfile(updates))
+            toast.success('Profile updated successfully!');
 
         } catch (error) {
             toast.error('Error updating the data!');
@@ -175,14 +145,16 @@ export default function About() {
     }
 
     return (
-        <Box sx={{ width: '100%', px: 2 }}>
+        <Box sx={{ width: '100%', px: 2, py: 4 }}>
             <Profile
                 onUpload={(event: React.SyntheticEvent, url: string) => {
                     setAvatarUrl(url)
-                    updateProfile({ username, website, avatar_url, company })
+                    updateProfile({ username, website, avatar_url: url, company })
                 }}
                 url={avatar_url}
-                username={username} />
+                username={username}
+                website={website}
+            />
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                     <Tab icon={<PersonIcon />} iconPosition="start" label="Profile" {...a11yProps(0)} />
@@ -192,47 +164,49 @@ export default function About() {
             </Box>
             <TabPanel value={value} index={0}>
                 <Paper sx={{ width: '100%', maxWidth: 500, py: 2, px: 1, borderRadius: "1rem" }} elevation={0}>
-                    <Grid container rowSpacing={1} columnSpacing={{ xs: 2, sm: 3, md: 2 }}>
-                        <Grid item xs={12} md={6}>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label="username"
-                                type="text"
-                                value={username || user?.user_metadata.name || ""}
-                                onChange={(e) => setUsername(e.target.value)}
-                            />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <TextField fullWidth size="small" label="email" type="text" value={session?.user?.email} disabled />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label="website"
-                                type="url"
-                                value={website || ''}
-                                onChange={(e) => setWebsite(e.target.value)}
-                            />
-                        </Grid>
+                    {session ? (
+                        <Grid container rowSpacing={1} columnSpacing={{ xs: 2, sm: 3, md: 2 }}>
+                            <Grid item xs={12} md={6}>
+                                <TextField
+                                    fullWidth
+                                    size="small"
+                                    label="username"
+                                    type="text"
+                                    value={username || user?.user_metadata.name}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                />
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <TextField fullWidth size="small" label="email" type="text" value={session?.user?.email} disabled />
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <TextField
+                                    fullWidth
+                                    size="small"
+                                    label="website"
+                                    type="url"
+                                    value={website || ''}
+                                    onChange={(e) => setWebsite(e.target.value)}
+                                />
+                            </Grid>
 
-                        <Grid item xs={12} md={6} >
-                            <TextField fullWidth size="small" label="company name" type="text" value={company || ''} onChange={(e) => setCompany(e.target.value)} />
+                            <Grid item xs={12} md={6} >
+                                <TextField fullWidth size="small" label="company name" type="text" value={company || ''} onChange={(e) => setCompany(e.target.value)} />
+                            </Grid>
+                            <Grid item xs={12} my={2} mx={2}>
+                                <Button
+                                    fullWidth
+                                    size="small"
+                                    sx={{ color: `contrastText` }}
+                                    variant="contained"
+                                    onClick={() => updateProfile({ username, website, avatar_url, company })}
+                                    disabled={loading}
+                                >
+                                    {loading ? 'Loading ...' : 'Save Changes'}
+                                </Button>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12} my={2} mx={2}>
-                            <Button
-                                fullWidth
-                                size="small"
-                                sx={{ color: `contrastText` }}
-                                variant="contained"
-                                onClick={() => updateProfile({ username, website, avatar_url, company })}
-                                disabled={loading}
-                            >
-                                {loading ? 'Loading ...' : 'Save Changes'}
-                            </Button>
-                        </Grid>
-                    </Grid>
+                    ) : (<Skeleton />)}
                 </Paper>
             </TabPanel>
             <TabPanel value={value} index={1}>
