@@ -28,6 +28,11 @@ Here are some ready made features within the app:
 
 - UI themes (dark)
 - Session/State Management
-- Authentication
 - Supabase CRUD logic
+- Authentication
+ <img width="1440" alt="Screenshot 2023-05-17 at 14 22 34" src="https://github.com/jeffubayi/next-supabase-mui-starter/assets/47192245/90519259-16e8-4a9a-9e88-a26e73ce0041">
+<img width="1440" alt="Screenshot 2023-05-17 at 14 23 56" src="https://github.com/jeffubayi/next-supabase-mui-starter/assets/47192245/17c19b74-f30a-4a9f-b894-5978a59fe8c4">
+<img width="1440" alt="Screenshot 2023-05-17 at 14 25 22" src="https://github.com/jeffubayi/next-supabase-mui-starter/assets/47192245/30084f3f-7cef-4161-afde-3aaceae37aba">
+
+
 
