@@ -2,6 +2,8 @@ import * as React from 'react';
 import StarIcon from '@mui/icons-material/StarBorder';
 import { Button, Card, CardActions, CardContent, CardHeader, Container, Grid, Typography } from '@mui/material';
 import { useRouter } from "next/router";
+import Head from 'next/head';
+
 import { tiers } from "../utility/enums"
 
 export default function Index() {
@@ -9,6 +11,9 @@ export default function Index() {
 
   return (
     <React.Fragment>
+      <Head>
+        <title>Home | Supabase</title>
+      </Head>
       <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 8, pb: 6 }}>
         <Typography
           component="h1"
@@ -48,7 +53,7 @@ export default function Index() {
                     backgroundColor: (theme) =>
                       theme.palette.mode === 'light'
                         ? theme.palette.grey[300]
-                        : theme.palette.grey[700],
+                        : theme.palette.grey[900],
                   }}
                 />
                 <CardContent>

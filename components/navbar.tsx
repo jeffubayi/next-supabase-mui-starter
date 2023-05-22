@@ -41,12 +41,18 @@ export default function Navbar() {
                 sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
             >
                 <Toolbar sx={{ flexWrap: 'wrap' }}>
-                    <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-                        {userProfile.company || "NeMuReSu"}
-                    </Typography>
+                    <Box sx={{ display:"flex", gap:1,flexGrow: 1 }}>
+                        <Avatar sx={{ height: "1.5rem", width: "1.5rem" }} src="https://seeklogo.com/images/S/supabase-logo-DCC676FFE2-seeklogo.com.png" />
+                        <Typography variant="h6" color="inherit" noWrap >
+                            Supabase
+                        </Typography>
+                    </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
                         <MenuItem onClick={() => router.push("/")}>
-                            <Typography sx={{ minWidth: 100 }}>About</Typography>
+                            <Typography sx={{ minWidth: 100 }}>Home</Typography>
+                        </MenuItem>
+                        <MenuItem onClick={() => router.push("/dashboard")}>
+                            <Typography sx={{ minWidth: 100 }}>Dashboard</Typography>
                         </MenuItem>
                         {!session ? (<Button onClick={() => router.push("/signin")} variant="outlined" sx={{ my: 1, mx: 1.5 }}>
                             Login
@@ -103,13 +109,13 @@ export default function Navbar() {
                         <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                             <ListItem>
                                 <ListItemAvatar>
-                                    <Avatar src={userProfile.avatar_url ?`https://aaepbxpivppmvuaemajn.supabase.co/storage/v1/object/public/avatars/${userProfile.avatar_url}` : user?.user_metadata?.avatar_url} />
+                                    <Avatar src={userProfile.avatar_url ? `https://aaepbxpivppmvuaemajn.supabase.co/storage/v1/object/public/avatars/${userProfile.avatar_url}` : user?.user_metadata?.avatar_url} />
                                 </ListItemAvatar>
                                 <ListItemText primary={userProfile.username || user?.user_metadata?.name || "Signed in as:"} secondary={session?.user?.email || "Not signed in"} />
                             </ListItem>
                         </List>
                         <Divider />
-                        <MenuItem onClick={() => router.push("/about")}>
+                        <MenuItem onClick={() => router.push("/settings")}>
                             <ListItemIcon>
                                 <Settings fontSize="small" />
                             </ListItemIcon>

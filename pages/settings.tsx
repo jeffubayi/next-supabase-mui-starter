@@ -7,6 +7,7 @@ import { useSession, useUser } from '@supabase/auth-helpers-react'
 import { TextField, Grid, Button, Box, List, ListItem, Skeleton, ListItemIcon, ListItemText, ListSubheader, Paper, Switch, Tab, Tabs, Typography } from '@mui/material';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from "react-redux";
+import Head from 'next/head';
 
 import Profile from "../components/card";
 import InviteList from "../components/list";
@@ -146,6 +147,9 @@ export default function About() {
 
     return (
         <Box sx={{ width: '100%', px: 2, py: 4 }}>
+            <Head>
+                <title>Settings | Supabase</title>
+            </Head>
             <Profile
                 onUpload={(event: React.SyntheticEvent, url: string) => {
                     setAvatarUrl(url)
@@ -157,9 +161,9 @@ export default function About() {
             />
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab icon={<PersonIcon />} iconPosition="start" label="Profile" {...a11yProps(0)} />
-                    <Tab icon={<AutoAwesomeIcon />} iconPosition="start" label="Themes" {...a11yProps(1)} />
-                    <Tab icon={<ContactMailIcon />} iconPosition="start" label="Invites" {...a11yProps(2)} />
+                    <Tab   label="Profile" {...a11yProps(0)} />
+                    <Tab   label="Themes" {...a11yProps(1)} />
+                    <Tab  label="Invites" {...a11yProps(2)} />
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0}>

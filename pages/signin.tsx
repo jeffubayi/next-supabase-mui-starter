@@ -1,11 +1,10 @@
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import * as React from 'react';
-import { Avatar, Box, CssBaseline, Grid, Link, Paper, Typography } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { CssBaseline, Grid, Box, Paper } from '@mui/material';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { Auth } from '@supabase/auth-ui-react'
 import { useTheme } from '@mui/material/styles';
-
+import Head from 'next/head';
 
 export default function SignIn() {
   const supabase = useSupabaseClient()
@@ -13,23 +12,21 @@ export default function SignIn() {
 
   return (
     <Grid container component="main" sx={{ height: '100vh' }}>
+       <Head>
+        <title>Authentication | Supabase</title>
+      </Head>
       <CssBaseline />
       <Grid item xs={12} sm={8} md={4} component={Paper} square>
 
         <Box
           sx={{
-            my: 8,
+            my: 4,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: '#42CD8E' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
+           <Box component="img" sx={{ height:"10rem",width:"10rem" }} src="https://app.supabase.com/img/supabase-dark.svg"/>
         </Box>
 
         <Box sx={{ mx: 6 }}>
