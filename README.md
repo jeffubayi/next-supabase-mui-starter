@@ -26,13 +26,15 @@ To connect the backend with supabase:
 
 Here are some ready made features within the app:
 
-- UI themes (dark)
+
 - Session/State Management
 - Supabase CRUD logic
+- UI components / themes (dark)
 - Authentication
- <img width="1440" alt="Screenshot 2023-05-17 at 14 22 34" src="https://github.com/jeffubayi/next-supabase-mui-starter/assets/47192245/90519259-16e8-4a9a-9e88-a26e73ce0041">
-<img width="1440" alt="Screenshot 2023-05-17 at 14 23 56" src="https://github.com/jeffubayi/next-supabase-mui-starter/assets/47192245/17c19b74-f30a-4a9f-b894-5978a59fe8c4">
-<img width="1440" alt="Screenshot 2023-05-17 at 14 25 22" src="https://github.com/jeffubayi/next-supabase-mui-starter/assets/47192245/30084f3f-7cef-4161-afde-3aaceae37aba">
+<img width="1440" alt="Screenshot 2023-05-23 at 15 51 07" src="https://github.com/jeffubayi/next-supabase-mui-starter/assets/47192245/e8bb06a6-3608-4210-b633-7ab5bf5e30e9">
+<img width="1440" alt="Screenshot 2023-05-23 at 15 51 32" src="https://github.com/jeffubayi/next-supabase-mui-starter/assets/47192245/796233e5-935a-4d13-b5d8-94f473c4829a">
+
+<img width="1440" alt="Screenshot 2023-05-23 at 15 54 25" src="https://github.com/jeffubayi/next-supabase-mui-starter/assets/47192245/5a5905cc-ed66-41eb-8575-b8702fabfecc">
 
 
 
