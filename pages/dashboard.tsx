@@ -7,6 +7,7 @@ import Head from 'next/head';
 import { useRouter } from "next/router";
 import { useSession, useUser } from '@supabase/auth-helpers-react'
 import EditIcon from '@mui/icons-material/Edit';
+import SettingsDialog from "../components/accountDialog"
 
 interface Props {
     window?: () => Window;
@@ -17,6 +18,15 @@ export default function Flights(props: Props) {
     const session = useSession();
     const user = useUser();
     const router = useRouter();
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     const flights = data ? data : []
     const columns = useMemo(
@@ -34,16 +44,23 @@ export default function Flights(props: Props) {
 
 
     return (
-        <Box sx={{ width: '100%', px: 2, py: 4 }}>
-            <List sx={{ width: '100%', borderRadius: "1rem",borderColor:"#333333", mb: 1, bgcolor: 'background.paper' }}>
+        <Box sx={{ width: '100%', px: 2, py: 2 }}>
+            <Head>
+                <title>Dashboard | Supabase</title>
+            </Head>
+            <SettingsDialog
+                open={open}
+                onClose={handleClose}
+            />
+            <List sx={{ width: '100%', borderRadius: "1rem", borderColor: "#333333", mb: 1, bgcolor: 'background.paper' }}>
                 <ListItem alignItems="flex-start" secondaryAction={
-                    <Button  onClick={() => router.push("/settings")} variant="outlined" startIcon={<EditIcon />}>
-                        Edit profile
+                    <Button onClick={handleClickOpen} variant="outlined" startIcon={<EditIcon />} sx={{ borderRadius: "0.4rem" }}>
+                        Edit
                     </Button>
                 }>
                     <ListItemAvatar>
                         {session ? (<Avatar alt="Remy Sharp" src={user?.user_metadata.avatar_url} />) : (
-                            <Skeleton animation="wave" variant="circular" sx={{ width: "4rem", height: "4rem",m:1 }} />
+                            <Skeleton animation="wave" variant="circular" sx={{ width: "4rem", height: "4rem", m: 1 }} />
                         )}
                     </ListItemAvatar>
                     <ListItemText
@@ -58,15 +75,11 @@ export default function Flights(props: Props) {
                                 >
                                     {session?.user?.email || <Skeleton width="60%" />}
                                 </Typography>
-                                {session ? ` - ${user?.role}` : `Not signed in`}
                             </React.Fragment>
                         }
                     />
                 </ListItem>
             </List>
-            <Head>
-                <title>Dashboard | Supabase</title>
-            </Head>
             <DataGrid
                 sx={{ borderRadius: "1rem", bgcolor: 'background.paper' }}
                 autoHeight

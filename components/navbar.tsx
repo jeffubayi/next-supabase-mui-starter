@@ -2,21 +2,46 @@
 import * as React from 'react';
 import { useRouter } from "next/router";
 import { useSession, useSupabaseClient, useUser } from '@supabase/auth-helpers-react'
-import { IconButton, Button, AppBar, Avatar, Box, CssBaseline, Divider, GlobalStyles, List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@mui/material';
+import { IconButton, Switch, Button, AppBar, Avatar, Box, CssBaseline, Divider, GlobalStyles, List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@mui/material';
 import { Settings, Logout } from '@mui/icons-material';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
 import { useSelector, useDispatch } from 'react-redux';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
+import SettingsDialog from "./accountDialog"
 import { clearUserProfile } from '../redux/userProfileSlice'
 import { RootState } from "../redux/types";
+import { toggleColorMode } from '../redux/themeSlice';
+
+interface ThemeState {
+    darkMode: boolean;
+}
 
 export default function Navbar() {
     const session = useSession();
     const router = useRouter();
     const user = useUser();
-    const dispatch = useDispatch();
-    const userProfile = useSelector((state: RootState) => state.userProfile);
+    const isSmallScreen = useMediaQuery("(min-width:500px)");
     const supabaseClient = useSupabaseClient()
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const dispatch = useDispatch();
+    const userProfile = useSelector((state: RootState) => state.userProfile);
+    const [openDialog, setOpenDialog] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpenDialog(true);
+    };
+
+    const handleClickClose = () => {
+        setOpenDialog(false);
+    };
+
+    const isDarkMode = useSelector((state: ThemeState) => state.darkMode);
+
+    const handleDarkModeToggle = () => {
+        dispatch(toggleColorMode());
+    };
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -41,11 +66,11 @@ export default function Navbar() {
                 sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
             >
                 <Toolbar sx={{ flexWrap: 'wrap' }}>
-                    <Box sx={{ display:"flex", gap:1,flexGrow: 1 }}>
+                    <Box sx={{ display: "flex", gap: 1, flexGrow: 1 }}>
                         <Avatar sx={{ height: "1.5rem", width: "1.5rem" }} src="https://seeklogo.com/images/S/supabase-logo-DCC676FFE2-seeklogo.com.png" />
-                        <Typography variant="h6" color="inherit" noWrap >
+                        {isSmallScreen && <Typography variant="h6" color="inherit" noWrap >
                             Supabase
-                        </Typography>
+                        </Typography>}
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
                         <MenuItem onClick={() => router.push("/")}>
@@ -115,7 +140,21 @@ export default function Navbar() {
                             </ListItem>
                         </List>
                         <Divider />
-                        <MenuItem onClick={() => router.push("/settings")}>
+                        <MenuItem >
+                            <ListItemIcon>
+                                <Brightness4Icon fontSize="small" />
+                            </ListItemIcon>
+                            <ListItemText> Dark Theme</ListItemText>
+                            <Switch
+                                size="small"
+                                edge="end"
+                                checked={!isDarkMode} onChange={handleDarkModeToggle}
+                                inputProps={{
+                                    'aria-labelledby': 'switch-list-label-bluetooth',
+                                }}
+                            />
+                        </MenuItem>
+                        <MenuItem onClick={handleClickOpen}>
                             <ListItemIcon>
                                 <Settings fontSize="small" />
                             </ListItemIcon>
@@ -130,6 +169,10 @@ export default function Navbar() {
                     </Menu>
                 </Toolbar>
             </AppBar>
+            <SettingsDialog
+                open={openDialog}
+                onClose={handleClickClose}
+            />
         </React.Fragment>
     );
 }

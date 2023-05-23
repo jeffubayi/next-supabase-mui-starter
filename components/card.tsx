@@ -64,7 +64,7 @@ export default function ProfileCard({ url, onUpload, username, website }: Profil
   }
 
   return (
-    <Card sx={{ display: 'flex', borderRadius: "1rem" }} elevation={0}>
+    <Card sx={{ display: 'flex', borderRadius: "1rem",  bgcolor: 'background.default',alignItems:"center"}} elevation={0}>
       <Badge
         overlap="circular"
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
@@ -80,22 +80,6 @@ export default function ProfileCard({ url, onUpload, username, website }: Profil
           <Skeleton animation="wave" variant="circular" sx={{ width: "7rem", height: "7rem", m: 1 }} />
         )}
       </Badge>
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <CardContent sx={{ flex: '1 0 auto' }}>
-          {session ? <Typography component="div" variant="h5">
-            {username || user?.user_metadata?.name}
-          </Typography>
-            : <Skeleton width="60%" />}
-          {session ? <Typography variant="subtitle1" color="text.secondary" component="div">
-            {session?.user?.email || user?.user_metadata?.email}
-          </Typography>
-            : <Skeleton />}
-        </CardContent>
-        <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
-          <Chip onClick={() => { window.location.assign(website) }} icon={<AdminPanelSettingsIcon />} size="small" label={website || "not available"} variant="outlined" color="primary" />
-        </Box>
-      </Box>
-
     </Card>
   );
 }

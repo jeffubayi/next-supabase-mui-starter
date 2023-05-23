@@ -57,7 +57,7 @@ export default function CheckboxListSecondary() {
   };
 
   return (
-    <List dense sx={{ width: '100%', maxWidth: 500, bgcolor: 'background.paper', borderRadius: "1rem" }} subheader={
+    <List dense sx={{ width: '100%', maxWidth: 600, bgcolor: 'background.default', borderRadius: "1rem" }} subheader={
       <>
         <ListSubheader>Invited Members</ListSubheader>
         <Stack
