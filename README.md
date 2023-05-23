@@ -1,4 +1,15 @@
-This is a [Next.js](https://nextjs.org/) project with [supabase](https://supabase.com/docs) Auth.
+## Overview
+This is a a starter template using the folowing stacks.
+- Framework - Next.js 13
+- Language - TypeScript
+- Auth - Supabase
+- Database - PostgresQL
+- Deployment - Vercel
+- Styling - emotion
+- Components - Material UI
+- Analytics - Vercel Analytics
+- Linting - ESLint
+- Formatting - Prettier
 
 ## Getting Started
 
@@ -23,14 +34,6 @@ To connect the backend with supabase:
 
 
 ## Features
-
-Here are some ready made features within the app:
-
-
-- Session/State Management
-- Supabase CRUD logic
-- UI components / themes (dark)
-- Authentication
 <img width="1440" alt="Screenshot 2023-05-23 at 15 51 07" src="https://github.com/jeffubayi/next-supabase-mui-starter/assets/47192245/e8bb06a6-3608-4210-b633-7ab5bf5e30e9">
 <img width="1440" alt="Screenshot 2023-05-23 at 15 51 32" src="https://github.com/jeffubayi/next-supabase-mui-starter/assets/47192245/796233e5-935a-4d13-b5d8-94f473c4829a">
 
