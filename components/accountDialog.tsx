@@ -9,6 +9,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 import Profile from "../components/card";
 import InviteList from "../components/list";
@@ -78,6 +79,7 @@ export default function SettingsDialog(props: SimpleDialogProps) {
     const [website, setWebsite] = useState("")
     const [avatar_url, setAvatarUrl] = useState("")
     const { onClose, open } = props;
+    const isSmallScreen = useMediaQuery("(min-width:500px)");
 
     const handleClose = () => {
         onClose()
@@ -164,6 +166,7 @@ export default function SettingsDialog(props: SimpleDialogProps) {
     return (
         <div>
             <Dialog
+                fullScreen={isSmallScreen ? false : true}
                 open={open}
                 maxWidth="sm"
                 onClose={handleClose}

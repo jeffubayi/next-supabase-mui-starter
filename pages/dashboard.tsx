@@ -53,10 +53,13 @@ export default function Flights(props: Props) {
                 onClose={handleClose}
             />
             <List sx={{ width: '100%', borderRadius: "1rem", borderColor: "#333333", mb: 1, bgcolor: 'background.paper' }}>
-                <ListItem alignItems="flex-start" secondaryAction={
-                    <Button onClick={handleClickOpen} variant="outlined" startIcon={<EditIcon />} sx={{ borderRadius: "0.4rem" }}>
-                        Edit
-                    </Button>
+                <ListItem alignItems="flex-start" secondaryAction={<>
+                    {session?.user?.email &&
+                        <Button onClick={handleClickOpen} variant="outlined" size="small" startIcon={<EditIcon />} sx={{ borderRadius: "0.4rem" }}>
+                            Edit
+                        </Button>
+                    }
+                </>
                 }>
                     <ListItemAvatar>
                         {session ? (<Avatar alt="Remy Sharp" src={user?.user_metadata.avatar_url} />) : (
